@@ -1,6 +1,6 @@
 {
   "name": "mm_tpl",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "这是超级美眉模板帮助类模块，用于MVC模式下的视图渲染",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,6 @@
   },
   "homepage": "https://github.com/qiuwenwu/mm_tpl#readme",
   "dependencies": {
-    "mm_expand": "^1.2.2"
+    "mm_expand": "^1.2.3"
   }
 }
