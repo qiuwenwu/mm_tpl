@@ -1,0 +1,35 @@
+{
+  "name": "mm_tpl",
+  "version": "1.2.1",
+  "description": "这是超级美眉模板帮助类模块，用于MVC模式下的视图渲染",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qiuwenwu/mm_tpl.git"
+  },
+  "keywords": [
+    "mytpl",
+    "async",
+    "await",
+    "promise",
+    "add",
+    "del",
+    "set",
+    "get",
+    "query",
+    "run",
+    "exec"
+  ],
+  "author": "邱文武",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qiuwenwu/mm_tpl/issues"
+  },
+  "homepage": "https://github.com/qiuwenwu/mm_tpl#readme",
+  "dependencies": {
+    "mm_expand": "^1.2.2"
+  }
+}
