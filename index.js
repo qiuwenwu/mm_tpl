@@ -227,6 +227,7 @@ Tpl.prototype.clear_cache = function(path, file) {
 };
 
 if (global.$) {
+	$.Tpl = new Tpl;
 	$.tpl = new Tpl();
 }
 
