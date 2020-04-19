@@ -74,15 +74,17 @@ Tpl.prototype.set_config = function(config) {
  */
 Tpl.prototype.render_before = function(body, model, options) {
 	var ret = "";
-	var f = options.cache_filename;
-	if (f && options.cache) {
-		if (!f.endWith(this.config.cache_extname)) {
-			f += this.config.cache_extname;
-		}
-		var file = f.fullname(this.config.cache_root);
-		// 如果文件存在
-		if (file.hasFile()) {
-			ret = file.loadText();
+	if (options && options.cache) {
+		var f = options.cache_filename;
+		if (f) {
+			if (!f.endWith(this.config.cache_extname)) {
+				f += this.config.cache_extname;
+			}
+			var file = f.fullname(this.config.cache_root);
+			// 如果文件存在
+			if (file.hasFile()) {
+				ret = file.loadText();
+			}
 		}
 	}
 	return ret;
@@ -115,13 +117,15 @@ Tpl.prototype.render_main = function(body, model, options) {
  */
 Tpl.prototype.render_after = function(body, model, options) {
 	if (body) {
-		var f = options.cache_filename;
-		if (f) {
-			if (!f.endWith(this.config.cache_extname)) {
-				f += this.config.cache_extname;
+		if (options) {
+			var f = options.cache_filename;
+			if (f) {
+				if (!f.endWith(this.config.cache_extname)) {
+					f += this.config.cache_extname;
+				}
+				var file = f.fullname(this.config.cache_root);
+				file.saveText(body);
 			}
-			var file = f.fullname(this.config.cache_root);
-			file.saveText(body);
 		}
 	}
 	return body;
