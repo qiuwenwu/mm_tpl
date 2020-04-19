@@ -1,81 +1,182 @@
 require('mm_expand');
+const template = require('art-template');
+const {
+	nativeRule,
+	artRule,
+	htmlRule
+} = require('./tpl_rule');
 
-if (!$.tpl_val) {
-	$.tpl_val = {};
+if (!$.globalBag) {
+	$.globalBag = {};
 }
 
 /**
- * @class 模板类
+ * 模板类
+ * @class
  */
 class Tpl {
 	/**
-	 * @description 创建模板帮助类函数 (构造函数)
+	 * 创建模板帮助类函数 (构造函数)
 	 * @param {String} scope 作用域
 	 * @param {String} dir 文件存储路径
 	 * @constructor
 	 */
-	constructor(scope, dir) {
-		// 当前目录
-		this.dir = $.runPath + '';
-		// 作用域
-		this.scope = "sys";
-		if (scope) {
-			this.scope = scope;
-		}
-
-		// 设置全局函数
-		if (!$.tpl_val[this.scope]) {
-			$.tpl_val[this.scope] = {};
-		}
+	constructor(config) {
 		/**
-		 * @type {Object} 全局视图背包
+		 * 配置参数
 		 */
-		this.globalBag = $.tpl_val[this.scope];
+		this.config = {
+			root: $.runPath + '',
+			extname: ".html",
+			rules: [nativeRule, artRule, htmlRule],
+			cache_root: './cache'.fullname(),
+			cache_extname: '.cache.html'
+		};
 
 		/**
-		 * @type {Object} 视图背包
+		 * 模板引擎
+		 */
+		this.template = template;
+
+		/**
+		 * 视图背包
 		 */
 		this.viewBag = {};
+
+		// 修改配置
+		this.set_config(config);
 	}
 }
 
 /**
- * @description 渲染模板文件
+ * 修改配置
+ * @param {Object} config 配置参数
+ */
+Tpl.prototype.set_config = function(config) {
+	if (config) {
+		this.config = Object.assign(this.config, config);
+	}
+	var cg = this.config;
+	for (var key in cg) {
+		template.defaults[key] = cg[key];
+	}
+	if (!cg.cache_root.hasDir()) {
+		cg.cache_root.addDir()
+	}
+};
+
+/**
+ * 渲染模板(之前)
+ * @param {String} body 模板
+ * @param {Object} model 数据模型
+ * @param {Object} options 配置参数
+ * @return {String} 渲染结果
+ */
+Tpl.prototype.render_before = function(body, model, options) {
+	var ret = "";
+	var f = options.cache_filename;
+	if (f && options.cache) {
+		if (!f.endWith(this.config.cache_extname)) {
+			f += this.config.cache_extname;
+		}
+		var file = f.fullname(this.config.cache_root);
+		// 如果文件存在
+		if (file.hasFile()) {
+			ret = file.loadText();
+		}
+	}
+	return ret;
+};
+
+/**
+ * 渲染模板(主要)
+ * @param {String} body 模板
+ * @param {Object} model 数据模型
+ * @param {Object} options 配置参数
+ * @return {String} 渲染结果
+ */
+Tpl.prototype.render_main = function(body, model, options) {
+	var ret = "";
+	if (body) {
+		ret = template.render(body, Object.assign({}, {
+			viewBag: this.viewBag,
+			globalBag: $.globalBag
+		}, model), options);
+	}
+	return ret;
+};
+
+/**
+ * 渲染模板(之后)
+ * @param {String} body 模板
+ * @param {Object} model 数据模型
+ * @param {Object} options 配置参数
+ * @return {String} 渲染结果
+ */
+Tpl.prototype.render_after = function(body, model, options) {
+	if (body) {
+		var f = options.cache_filename;
+		if (f) {
+			if (!f.endWith(this.config.cache_extname)) {
+				f += this.config.cache_extname;
+			}
+			var file = f.fullname(this.config.cache_root);
+			file.saveText(body);
+		}
+	}
+	return body;
+};
+
+
+/**
+ * 渲染模板
+ * @param {String} body 模板
+ * @param {Object} model 数据模型
+ * @param {Object} options 配置参数
+ * @return {String} view 渲染后的视图
+ */
+Tpl.prototype.render = function(body, model, options) {
+	var ret = this.render_before(body, model, options);
+	if (!ret) {
+		ret = this.render_main(body, model, options);
+		if (ret) {
+			ret = this.render_after(ret, model, options);
+		}
+	}
+	return ret;
+};
+
+/**
+ * 编译模板并返回渲染函数
+ * @param {String} body 模板
+ * @param {Object} options 配置参数
+ * @return {Function} 渲染函数
+ */
+Tpl.prototype.compile = function(body, options) {
+	return template.compile(body, options);
+};
+
+/**
+ * 渲染模板文件
  * @param {String} file 模板文件路径
  * @param {Object} model 数据模型
- * @return {String} view 渲染后的视图
+ * @param {Object} options 配置参数
+ * @return {String} 渲染后的视图
  */
-Tpl.prototype.view = function(file, model) {
-	var f = file.fullname(this.dir);
-	var template = f.loadText();
-	if (template) {
-		return template.tpl({
-			view: this.view,
-			viewBag: this.viewBag,
-			model: model,
-			globalBag: this.globalBag
-		});
+Tpl.prototype.view = function(file, model, options) {
+	if (!file.endWith(this.config.extname)) {
+		file += this.config.extname;
 	}
-	return '';
+	var f = file.fullname(this.dir);
+	var body = f.loadText();
+	if (body) {
+		return this.render(body, model, options);
+	}
+	return "";
 };
 
 /**
- * @description 渲染模板
- * @param {String} template 模板
- * @param {Object} model 数据模型
- * @return {String} view 渲染后的视图
- */
-Tpl.prototype.render = function(template, model) {
-	return template.tpl({
-		view: this.view,
-		viewBag: this.viewBag,
-		model: model,
-		globalBag: this.globalBag
-	});
-};
-
-/**
- * @description 设置视图背包成员
+ * 设置视图背包成员
  * @param {Object} obj 设置的对象
  */
 Tpl.prototype.set = function(obj) {
@@ -83,7 +184,7 @@ Tpl.prototype.set = function(obj) {
 };
 
 /**
- * @description 删除视图背包成员
+ * 删除视图背包成员
  * @param {Array|String} arrOrStr 删除的键或键数组
  */
 Tpl.prototype.del = function(arrOrStr) {
@@ -97,7 +198,7 @@ Tpl.prototype.del = function(arrOrStr) {
 };
 
 /**
- * @description 获取视图背包成员
+ * 获取视图背包成员
  * @param {String} key 获取的对象键名
  * @return {Object} 值
  */
@@ -105,8 +206,28 @@ Tpl.prototype.get = function(key) {
 	return this.viewBag[key];
 };
 
+/**
+ * 清除缓存
+ * @param {Object} path 检索的路径
+ * @param {Object} file 文件名
+ */
+Tpl.prototype.clear_cache = function(path, file) {
+	var cg = this.config;
+	var root = cg.cache_root;
+	var dir = path ? path.fullname(root) : root;
+	var keyword = file || '*' + cg.cache_extname;
+	var list_file = $.file.getAll(dir, keyword);
+	list_file.forEach((f) => {
+		f.delFile(root);
+	});
+	list_file = $.file.get(dir, keyword);
+	list_file.forEach((f) => {
+		f.delFile(root);
+	});
+};
+
 if (global.$) {
-	$.Tpl = Tpl;
+	$.tpl = new Tpl();
 }
 
 module.exports = Tpl;
