@@ -6,6 +6,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
+report.*.json
 
 # Runtime data
 pids
@@ -89,5 +91,5 @@ sw.*
 # Vim swap files
 *.swp
 
-# cache
-cache
+#  mm app
+
