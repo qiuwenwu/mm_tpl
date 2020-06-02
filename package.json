@@ -1,6 +1,6 @@
 {
   "name": "mm_tpl",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "这是超级美眉模板帮助类模块，用于MVC模式下的视图渲染",
   "main": "index.js",
   "scripts": {

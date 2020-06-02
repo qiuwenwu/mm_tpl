@@ -77,7 +77,7 @@ Tpl.prototype.render_before = function(body, model, options) {
 	if (options && options.cache) {
 		var f = options.cache_filename;
 		if (f) {
-			if (!f.endWith(this.config.cache_extname)) {
+			if (f.replace('./', '').indexOf('.') == -1 && !f.endWith(this.config.cache_extname)) {
 				f += this.config.cache_extname;
 			}
 			var file = f.fullname(this.config.cache_root);
@@ -120,7 +120,7 @@ Tpl.prototype.render_after = function(body, model, options) {
 		if (options) {
 			var f = options.cache_filename;
 			if (f) {
-				if (!f.endWith(this.config.cache_extname)) {
+				if (f.replace('./', '').indexOf('.') == -1 && !f.endWith(this.config.cache_extname)) {
 					f += this.config.cache_extname;
 				}
 				var file = f.fullname(this.config.cache_root);
@@ -168,7 +168,7 @@ Tpl.prototype.compile = function(body, options) {
  * @return {String} 渲染后的视图
  */
 Tpl.prototype.view = function(file, model, options) {
-	if (!file.endWith(this.config.extname)) {
+	if (file.replace('./', '').indexOf('.') == -1 && !file.endWith(this.config.extname)) {
 		file += this.config.extname;
 	}
 	var f = file.fullname(this.dir);
