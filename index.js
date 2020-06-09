@@ -3,7 +3,8 @@ const template = require('art-template');
 const {
 	nativeRule,
 	artRule,
-	htmlRule
+	htmlRule,
+	jsRule
 } = require('./tpl_rule');
 
 if (!$.globalBag) {
@@ -28,7 +29,7 @@ class Tpl {
 		this.config = {
 			root: $.runPath + '',
 			extname: ".html",
-			rules: [nativeRule, artRule, htmlRule],
+			rules: [nativeRule, artRule, htmlRule, jsRule],
 			cache_root: './cache'.fullname(),
 			cache_extname: '.cache.html'
 		};

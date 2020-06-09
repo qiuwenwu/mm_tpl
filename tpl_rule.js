@@ -226,8 +226,16 @@ var htmlRule = Object.assign({}, artRule, {
 	test: /[ \t\r\n]*<!--\{([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*\}-->/
 });
 
+/**
+ * js注释模板语法规则
+ */
+var jsRule = Object.assign({}, artRule, {
+	test: /[ \t\r\n]*\/\*\[([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*\]\*\//
+});
+
 module.exports = {
 	nativeRule,
 	artRule,
+	jsRule,
 	htmlRule
 };
