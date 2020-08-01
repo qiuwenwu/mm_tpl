@@ -1,32 +1,32 @@
 {
-  "name": "mm_tpl",
-  "version": "2.0.6",
-  "description": "这是超级美眉模板帮助类模块，用于MVC模式下的视图渲染",
-  "main": "index.js",
-  "scripts": {
-    "test": "node test.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/qiuwenwu/mm_tpl.git"
-  },
-  "keywords": [
-    "mvc",
-    "web",
-    "view",
-    "model",
-    "controller",
-    "render",
-    "template"
-  ],
-  "author": "邱文武",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/qiuwenwu/mm_tpl/issues"
-  },
-  "homepage": "https://github.com/qiuwenwu/mm_tpl#readme",
-  "dependencies": {
-    "art-template": "^4.13.2",
-    "mm_expand": "^1.3.9"
-  }
+    "name": "mm_tpl",
+    "version": "2.0.8",
+    "description": "这是超级美眉模板帮助类模块，用于MVC模式下的视图渲染",
+    "main": "index.js",
+    "scripts": {
+        "test": "node test.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/qiuwenwu/mm_tpl.git"
+    },
+    "keywords": [
+        "mvc",
+        "web",
+        "view",
+        "model",
+        "controller",
+        "render",
+        "template"
+    ],
+    "author": "邱文武",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/qiuwenwu/mm_tpl/issues"
+    },
+    "homepage": "https://github.com/qiuwenwu/mm_tpl#readme",
+    "dependencies": {
+        "art-template": "^4.13.2",
+        "mm_expand": "^1.4.3"
+    }
 }
