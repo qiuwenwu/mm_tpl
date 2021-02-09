@@ -46,6 +46,11 @@ class Tpl {
 
 		// 修改配置
 		this.set_config(config);
+		
+		/**
+		 * 模板更目录
+		 */
+		this.dir = "./template/"
 	}
 }
 
