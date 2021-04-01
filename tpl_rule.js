@@ -233,9 +233,25 @@ var jsRule = Object.assign({}, artRule, {
 	test: /[ \t\r\n]*\/\*\[([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*\]\*\//
 });
 
+/**
+ * python注释模板语法规则
+ */
+var pyRule = Object.assign({}, artRule, {
+	test: /[ \t\r\n]*##([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*##/
+});
+
+/**
+ * python注释模板语法规则
+ */
+var pyRule2 = Object.assign({}, artRule, {
+	test: /"""#([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*#"""/
+});
+
 module.exports = {
 	nativeRule,
 	artRule,
 	jsRule,
-	htmlRule
+	htmlRule,
+	pyRule,
+	pyRule2
 };

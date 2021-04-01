@@ -4,7 +4,9 @@ const {
 	nativeRule,
 	artRule,
 	htmlRule,
-	jsRule
+	jsRule,
+	pyRule,
+	pyRule2
 } = require('./tpl_rule');
 
 if (!$.globalBag) {
@@ -29,7 +31,7 @@ class Tpl {
 		this.config = {
 			root: $.runPath + '',
 			extname: ".html",
-			rules: [nativeRule, artRule, htmlRule, jsRule],
+			rules: [nativeRule, artRule, htmlRule, jsRule, pyRule, pyRule2],
 			cache_root: './cache'.fullname(),
 			cache_extname: '.cache.html'
 		};
