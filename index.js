@@ -1,4 +1,4 @@
-require('mm_expand');
+﻿require('mm_expand');
 const template = require('art-template');
 const {
 	nativeRule,
@@ -52,7 +52,12 @@ class Tpl {
 		/**
 		 * 模板更目录
 		 */
-		this.dir = "./template/"
+		this.dir = "./template/";
+		
+		/**
+		 * 错误提示
+		 */
+		this.error = null;
 	}
 }
 
@@ -176,15 +181,23 @@ Tpl.prototype.compile = function(body, options) {
  * @return {String} 渲染后的视图
  */
 Tpl.prototype.view = function(file, model, options) {
-	if (file.replace('./', '').indexOf('.') == -1 && !file.endWith(this.config.extname)) {
+	if (file.replace('./', '').indexOf('.') === -1 && !file.endWith(this.config.extname)) {
 		file += this.config.extname;
 	}
 	var f = file.fullname(this.dir);
+	if(!f.hasFile()){
+		this.error = {
+			code: 10000,
+			message: f + "文件不存在！"
+		}
+	}
 	var body = f.loadText();
 	if (body) {
 		return this.render(body, model, options);
 	}
-	return "";
+	else {
+		return "";
+	}
 };
 
 /**
