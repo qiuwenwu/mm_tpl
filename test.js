@@ -44,6 +44,24 @@ async function test() {
 	
 	// 设置实例化视图变量
 	tpl.viewBag.name = "系统名称";
+	tpl.current_theme = "game";
+	tpl.dir = "";
+	
+	$.hook.addAction('test', (ret) => {
+		return "<div>你好吗？</div>";
+	}, 2, "测试动作2");
+	
+	$.hook.addAction('test', (ret) => {
+		return "<div>你好！</div>";
+	}, 1, "测试动作1");
+	
+	$.hook.addFilter('test', (ret) => {
+		return ret.replace("你", "您");
+	}, 1, "测试过滤");
+	
+	// $.hook.delAction('test', "测试动作1");
+	// $.hook.delFilter('test', "测试过滤");
+	
 	// 渲染视图(并缓存)
 	var body = tpl.view("./test", { arr: [123, 234] }, {
 		// 是否读取缓存文件, 如果为false, 但有cache_filename, 表示只保存缓存，但不读取

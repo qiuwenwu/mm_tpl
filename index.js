@@ -1,5 +1,6 @@
 ﻿require('mm_expand');
 const template = require('art-template');
+const Hook = require('./hook.js');
 const {
 	nativeRule,
 	artRule,
@@ -11,6 +12,10 @@ const {
 
 if (!$.globalBag) {
 	$.globalBag = {};
+}
+
+if (!$.hook) {
+	$.hook = new Hook();
 }
 
 /**
@@ -30,6 +35,8 @@ class Tpl {
 		 */
 		this.config = {
 			root: $.runPath + '',
+			defualt_dir: "./template/",
+			defualt_theme: 'defualt',
 			extname: ".html",
 			rules: [nativeRule, artRule, htmlRule, jsRule, pyRule, pyRule2],
 			cache_root: './cache'.fullname(),
@@ -48,12 +55,17 @@ class Tpl {
 
 		// 修改配置
 		this.set_config(config);
-		
+
 		/**
-		 * 模板更目录
+		 * 模板根目录
 		 */
 		this.dir = "./template/";
-		
+
+		/**
+		 * 当前主题
+		 */
+		this.current_theme = this.config.defualt_theme;
+
 		/**
 		 * 错误提示
 		 */
@@ -104,6 +116,33 @@ Tpl.prototype.render_before = function(body, model, options) {
 };
 
 /**
+ * 加载函数
+ * @param {Object} m 模型
+ */
+Tpl.prototype.loadFunc = function(m) {
+	var _this = this;
+	m.view = function(file, model, options) {
+		return _this.view(file, model, options);
+	}
+	m.render = function(body, model, options) {
+		return _this.render(body, model, options);
+	}
+	m.hook_action = function(name, content, ...args) {
+		if (!content) {
+			content = "";
+		}
+		return $.hook.runAction(name, content, ...args);
+	}
+	m.hook_filter = function(name, content, ...args) {
+		if (!content) {
+			content = "";
+		}
+		return $.hook.runFilter(name, content, ...args);
+	}
+	return m;
+}
+
+/**
  * 渲染模板(主要)
  * @param {String} body 模板
  * @param {Object} model 数据模型
@@ -113,10 +152,12 @@ Tpl.prototype.render_before = function(body, model, options) {
 Tpl.prototype.render_main = function(body, model, options) {
 	var ret = "";
 	if (body) {
-		ret = template.render(body, Object.assign({}, {
+		var m = Object.assign({}, {
 			viewBag: this.viewBag,
 			globalBag: $.globalBag
-		}, model), options);
+		}, model);
+		this.loadFunc(m);
+		ret = template.render(body, m, options);
 	}
 	return ret;
 };
@@ -184,8 +225,18 @@ Tpl.prototype.view = function(file, model, options) {
 	if (file.replace('./', '').indexOf('.') === -1 && !file.endWith(this.config.extname)) {
 		file += this.config.extname;
 	}
-	var f = file.fullname(this.dir);
-	if(!f.hasFile()){
+	var f = file.fullname(this.dir + this.current_theme);
+	if (!f.hasFile()) {
+		f = file.fullname(this.dir + this.config.defualt_theme);
+		if (!f.hasFile()) {
+			f = file.fullname(this.defualt_dir + this.config.current_theme);
+			if (!f.hasFile()) {
+				f = file.fullname(this.defualt_dir + this.config.defualt_theme);
+			}
+		}
+	}
+
+	if (!f.hasFile()) {
 		this.error = {
 			code: 10000,
 			message: f + "文件不存在！"
@@ -194,8 +245,7 @@ Tpl.prototype.view = function(file, model, options) {
 	var body = f.loadText();
 	if (body) {
 		return this.render(body, model, options);
-	}
-	else {
+	} else {
 		return "";
 	}
 };
