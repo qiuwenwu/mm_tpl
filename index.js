@@ -70,6 +70,11 @@ class Tpl {
 		 * 错误提示
 		 */
 		this.error = null;
+		
+		/**
+		 * 初始化
+		 */
+		this.init(config);
 	}
 }
 
@@ -89,6 +94,14 @@ Tpl.prototype.set_config = function(config) {
 		cg.cache_root.addDir()
 	}
 };
+
+/**
+ * 初始化
+ * @param {Object} config 配置参数
+ */
+Tpl.prototype.init = function(config) {
+	this.set_config(config);
+}
 
 /**
  * 渲染模板(之前)
