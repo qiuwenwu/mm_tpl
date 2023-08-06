@@ -70,7 +70,7 @@ class Tpl {
 		 * 错误提示
 		 */
 		this.error = null;
-		
+
 		/**
 		 * 初始化
 		 */
@@ -94,6 +94,17 @@ Tpl.prototype.set_config = function(config) {
 		cg.cache_root.addDir()
 	}
 };
+
+
+/**
+ * 初始化
+ * @param {String} name 名称
+ * @param {Object} req 请求参数
+ * @param {Object} args 附加参数
+ */
+Tpl.prototype.runFunc = function(name, req, ...args) {
+	return $.hook.runFunc(name, this.viewBag, req, ...args);
+}
 
 /**
  * 初始化
@@ -140,17 +151,14 @@ Tpl.prototype.loadFunc = function(m) {
 	m.render = function(body, model, options) {
 		return _this.render(body, model, options);
 	}
-	m.hook_action = function(name, content, ...args) {
-		if (!content) {
-			content = "";
-		}
-		return $.hook.runAction(name, content, ...args);
+	m.hook_action = function(name, ...args) {
+		return $.hook.runAction(name, m, ...args);
 	}
 	m.hook_filter = function(name, content, ...args) {
 		if (!content) {
 			content = "";
 		}
-		return $.hook.runFilter(name, content, ...args);
+		return $.hook.runFilter(name, content, m, ...args);
 	}
 	return m;
 }
@@ -242,9 +250,9 @@ Tpl.prototype.view = function(file, model, options) {
 	if (!f.hasFile()) {
 		f = file.fullname(this.dir + this.config.defualt_theme);
 		if (!f.hasFile()) {
-			f = file.fullname(this.defualt_dir + this.config.current_theme);
+			f = file.fullname(this.config.defualt_dir + this.current_theme);
 			if (!f.hasFile()) {
-				f = file.fullname(this.defualt_dir + this.config.defualt_theme);
+				f = file.fullname(this.config.defualt_dir + this.config.defualt_theme);
 			}
 		}
 	}
