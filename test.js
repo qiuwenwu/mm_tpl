@@ -91,7 +91,6 @@ async function test() {
 		// 缓存文件名
 		cache_filename: "./test"
 	});
-
 	// 删除指定目录的缓存文件
 	// tpl.clear_cache('./mall');
 	console.log(body);

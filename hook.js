@@ -1,6 +1,6 @@
 const {
 	types
-} = require("node:util");
+} = require("util");
 
 class Hook {
 	constructor() {
