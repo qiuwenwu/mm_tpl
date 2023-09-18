@@ -1,4 +1,4 @@
-﻿require('mm_expand');
+require('mm_expand');
 const template = require('art-template');
 const Hook = require('./hook.js');
 const {
@@ -35,8 +35,8 @@ class Tpl {
 		 */
 		this.config = {
 			root: $.runPath + '',
-			defualt_dir: "./template/",
-			defualt_theme: 'defualt',
+			default_dir: "./template/",
+			default_theme: 'default',
 			extname: ".html",
 			rules: [nativeRule, artRule, htmlRule, jsRule, pyRule, pyRule2],
 			cache_root: './cache'.fullname(),
@@ -64,7 +64,7 @@ class Tpl {
 		/**
 		 * 当前主题
 		 */
-		this.current_theme = this.config.defualt_theme;
+		this.current_theme = this.config.default_theme;
 
 		/**
 		 * 错误提示
@@ -146,10 +146,10 @@ Tpl.prototype.render_before = function(body, model, options) {
 Tpl.prototype.loadFunc = function(m) {
 	var _this = this;
 	m.view = function(file, model, options) {
-		return _this.view(file, model, options);
+		return _this.view(file, Object.assign({}, m, model), options);
 	}
 	m.render = function(body, model, options) {
-		return _this.render(body, model, options);
+		return _this.render(body, Object.assign({}, m, model), options);
 	}
 	m.hook_action = function(name, ...args) {
 		return $.hook.runAction(name, m, ...args);
@@ -248,11 +248,11 @@ Tpl.prototype.view = function(file, model, options) {
 	}
 	var f = file.fullname(this.dir + this.current_theme);
 	if (!f.hasFile()) {
-		f = file.fullname(this.dir + this.config.defualt_theme);
+		f = file.fullname(this.dir + this.config.default_theme);
 		if (!f.hasFile()) {
-			f = file.fullname(this.config.defualt_dir + this.current_theme);
+			f = file.fullname(this.config.default_dir + this.current_theme);
 			if (!f.hasFile()) {
-				f = file.fullname(this.config.defualt_dir + this.config.defualt_theme);
+				f = file.fullname(this.config.default_dir + this.config.default_theme);
 			}
 		}
 	}

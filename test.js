@@ -84,7 +84,8 @@ async function test() {
 
 	// 渲染视图(并缓存)
 	var body = tpl.view("./test", {
-		arr: [123, 234]
+		arr: [123, 234],
+		message: "hello world！"
 	}, {
 		// 是否读取缓存文件, 如果为false, 但有cache_filename, 表示只保存缓存，但不读取
 		cache: false,
