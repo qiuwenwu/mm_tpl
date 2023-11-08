@@ -58,10 +58,10 @@ async function test() {
 		console.log(m);
 	});
 
-	$.hook.addAction('test', function(m, param) {
+	$.hook.addAction('test', function aa (m, param) {
 		// console.log(param, m);
 		return "<div>你好吗？</div>";
-	}, 2, "测试动作2");
+	}, 2);
 
 	$.hook.addAction('test', function(m, param) {
 		return "<div>你好！</div>";
@@ -71,7 +71,8 @@ async function test() {
 		// console.log(ret, param, m);
 		return ret.replace("你", "您");
 	}, 1, "测试过滤");
-
+	
+	// $.hook.delAction('test', "aa");
 	// $.hook.delAction('test', "测试动作1");
 	// $.hook.delFilter('test', "测试过滤");
 

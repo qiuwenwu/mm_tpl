@@ -21,6 +21,24 @@ Hook.prototype.sort = function(list) {
 }
 
 /**
+ * 获取别名
+ * @param {Function} func 钩子函数
+ * @param {String} alias 别名
+ */
+Hook.prototype.getName = function(func, alias) {
+	if (!alias) {
+		var str = func.toString();
+		var name = str.between('function ', "(").trim();
+		if (name) {
+			alias = name;
+		} else {
+			alias = (new Date()).toString().md5().substring(0, 8);
+		}
+	}
+	return alias;
+}
+
+/**
  * 添加函数钩子
  * @param {String} name 钩子名称
  * @param {Function} func 钩子函数
@@ -28,6 +46,7 @@ Hook.prototype.sort = function(list) {
  * @param {String} alias 函数别名，用于删除
  */
 Hook.prototype.addFunc = function(name, func, sort, alias) {
+	alias = this.getName(func, alias);
 	var obj = {
 		func,
 		sort,
@@ -39,6 +58,7 @@ Hook.prototype.addFunc = function(name, func, sort, alias) {
 	}
 	arr.push(obj);
 	this.dict_func[name] = this.sort(arr);
+	return alias;
 }
 
 /**
@@ -49,6 +69,7 @@ Hook.prototype.addFunc = function(name, func, sort, alias) {
  * @param {String} alias 函数别名，用于删除
  */
 Hook.prototype.addAction = function(name, func, sort, alias) {
+	alias = this.getName(func, alias);
 	var obj = {
 		func,
 		sort,
@@ -60,6 +81,7 @@ Hook.prototype.addAction = function(name, func, sort, alias) {
 	}
 	arr.push(obj);
 	this.dict_action[name] = this.sort(arr);
+	return alias;
 }
 
 /**
@@ -70,6 +92,7 @@ Hook.prototype.addAction = function(name, func, sort, alias) {
  * @param {String} alias 函数别名，用于删除
  */
 Hook.prototype.addFilter = function(name, func, sort, alias) {
+	alias = this.getName(func, alias);
 	var obj = {
 		func,
 		sort,
@@ -81,8 +104,8 @@ Hook.prototype.addFilter = function(name, func, sort, alias) {
 	}
 	arr.push(obj);
 	this.dict_filter[name] = this.sort(arr);
+	return alias;
 }
-
 
 /**
  * 删除函数钩子
